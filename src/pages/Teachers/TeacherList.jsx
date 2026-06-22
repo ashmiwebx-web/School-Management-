@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiPlusCircle } from "react-icons/fi";
 
 import CommonTable from "../../components/Table/CommonTable";
 import Pagination from "../../components/Pagination/Pagination";
+import CommonButton from "../../components/Buttons/CommonButton";
 import { PAGE_SIZE, classNames } from "../../constants/theme";
 import { getTeachers } from "../../services/teacherService";
 import { showError } from "../../components/Toast/AppToast";
@@ -45,13 +47,16 @@ export default function TeacherList() {
             <p className={classNames.subtitle}>Manage teacher details</p>
           </div>
 
-          <button
+          <CommonButton
             type="button"
+            variant="add"
+            size="lg"
+            className="min-w-[160px]"
             onClick={() => navigate("/add-teacher")}
-            className={classNames.primaryButton}
           >
+            <FiPlusCircle size={18} />
             Add Teacher
-          </button>
+          </CommonButton>
         </div>
 
         <CommonTable

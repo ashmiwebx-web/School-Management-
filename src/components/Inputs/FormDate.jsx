@@ -61,7 +61,7 @@ export default function FormDate({ label, value = "", onChange = () => {} }) {
           }}
           placeholder="dd/mm/yyyy"
           maxLength={10}
-          className="h-[44px] w-full rounded-[6px] border border-[#e5e9f2] px-3 pr-10 text-[14px] outline-none focus:border-[#506ee4]"
+          className="h-[35px] w-full rounded-[6px] border border-[#e5e9f2] px-3 pr-10 text-[14px] outline-none focus:border-[#506ee4]"
         />
 
         <button

@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiPlusCircle } from "react-icons/fi";
 
 import CommonTable from "../../components/Table/CommonTable";
 import CommonModal from "../../components/Modal/CommonModal";
 import FormInput from "../../components/Inputs/FormInput";
 import Pagination from "../../components/Pagination/Pagination";
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import CommonButton from "../../components/Buttons/CommonButton";
 import { showSuccess, showError } from "../../components/Toast/AppToast";
 import { API, EVENTS, PAGE_SIZE } from "../../constants/theme";
 
 const emptyForm = {
-  blockId: "",
   blockName: "",
   noOfFloors: "",
   description: "",
@@ -45,7 +45,6 @@ export default function BlocksTab() {
 
   const filteredBlocks = useMemo(() => {
     const q = search.toLowerCase().trim();
-
     if (!q) return blocks;
 
     return blocks.filter((item) =>
@@ -72,32 +71,19 @@ export default function BlocksTab() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const openAddModal = async () => {
+  const openAddModal = () => {
     setEditId(null);
-
-    try {
-      const res = await fetch(`${API}/api/blocks/next-id`);
-      const data = await res.json();
-
-   setForm({
-  ...emptyForm,
-});
-    } catch {
-      setForm(emptyForm);
-    }
-
+    setForm(emptyForm);
     setOpen(true);
   };
 
   const handleEdit = (item) => {
     setEditId(item.id);
-
-  setForm({
-  blockName: item.blockName || "",
-  noOfFloors: item.noOfFloors || "",
-  description: item.description || "",
-});
-
+    setForm({
+      blockName: item.blockName || "",
+      noOfFloors: item.noOfFloors || "",
+      description: item.description || "",
+    });
     setOpen(true);
   };
 
@@ -158,7 +144,16 @@ export default function BlocksTab() {
             </p>
           </div>
 
-          <PrimaryButton onClick={openAddModal}>Add Block</PrimaryButton>
+         <CommonButton
+  type="button"
+  variant="add"
+  size="lg"
+  className="min-w-[140px] gap-2"
+  onClick={openAddModal}
+>
+  <FiPlusCircle className="text-[18px]" />
+  Add Block
+</CommonButton>
         </div>
 
         <div className="flex items-center justify-end border-b border-[#e5e9f2] p-4">
@@ -175,12 +170,12 @@ export default function BlocksTab() {
           serialStart={(currentPage - 1) * PAGE_SIZE}
           onEdit={handleEdit}
           emptyText="No blocks found"
-        columns={[
-  { title: "Block ID", key: "blockId", blue: true, align: "center" },
-  { title: "Block Name", key: "blockName", bold: true, align: "center" },
-  { title: "No. Of Floors", key: "noOfFloors", align: "center" },
-  { title: "Description", key: "description", align: "center" },
-]}
+          columns={[
+            { title: "Block ID", key: "blockId", blue: true, align: "center" },
+            { title: "Block Name", key: "blockName", bold: true, align: "center" },
+            { title: "No. Of Floors", key: "noOfFloors", align: "center" },
+            { title: "Description", key: "description", align: "center" },
+          ]}
         />
 
         <Pagination
@@ -197,29 +192,29 @@ export default function BlocksTab() {
         onClose={closeModal}
         onSave={saveBlock}
       >
- <div className="grid grid-cols-1 gap-4">
-  <FormInput
-    label="Block Name"
-    value={form.blockName}
-    placeholder="Enter Block Name"
-    onChange={(value) => update("blockName", value)}
-  />
+        <div className="grid grid-cols-1 gap-4">
+          <FormInput
+            label="Block Name"
+            value={form.blockName}
+            placeholder="Enter Block Name"
+            onChange={(value) => update("blockName", value)}
+          />
 
-  <FormInput
-    label="No. Of Floors"
-    type="number"
-    value={form.noOfFloors}
-    placeholder="Enter No. Of Floors"
-    onChange={(value) => update("noOfFloors", value)}
-  />
+          <FormInput
+            label="No. Of Floors"
+            type="number"
+            value={form.noOfFloors}
+            placeholder="Enter No. Of Floors"
+            onChange={(value) => update("noOfFloors", value)}
+          />
 
-  <FormInput
-    label="Description"
-    value={form.description}
-    placeholder="Enter Description"
-    onChange={(value) => update("description", value)}
-  />
-</div>
+          <FormInput
+            label="Description"
+            value={form.description}
+            placeholder="Enter Description"
+            onChange={(value) => update("description", value)}
+          />
+        </div>
       </CommonModal>
     </>
   );

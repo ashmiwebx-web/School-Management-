@@ -33,7 +33,7 @@ export const classNames = {
   title: "text-[24px] font-bold text-[#061b49]",
   subtitle: "mt-2 text-[15px] text-[#6b7280]",
   primaryButton:
-    "h-[48px] cursor-pointer rounded-[6px] bg-[#506ee4] px-6 text-[15px] font-semibold text-white hover:bg-[#3d5ee1]",
+    "inline-flex h-[48px] cursor-pointer items-center justify-center gap-2 rounded-[6px] border border-[#506ee4] bg-[#506ee4] px-6 text-[16px] font-bold text-white shadow-sm hover:border-[#3d5ee1] hover:bg-[#3d5ee1]",
   secondaryButton:
     "h-[42px] cursor-pointer rounded-[6px] border border-[#e5e9f2] bg-white px-5 text-[14px] font-semibold text-[#061b49] hover:bg-[#f8f9fd]",
   formLabel: "mb-2 block text-[14px] font-semibold text-[#061b49]",

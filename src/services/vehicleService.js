@@ -1,14 +1,5 @@
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const mapVehicle = (item) => ({
-  id: item.id,
-  busId: item.bus_id || item.busId || "",
-  busRegistrationNo:
-    item.bus_registration_no || item.busRegistrationNo || "",
-  driverName: item.driver_name || item.driverName || "",
-  driverNo: item.driver_no || item.driverNo || "",
-});
-
 const handleResponse = async (res) => {
   const data = await res.json();
 
@@ -18,6 +9,15 @@ const handleResponse = async (res) => {
 
   return data;
 };
+
+const mapVehicle = (item) => ({
+  id: item.id,
+  busId: item.bus_id || item.busId || "",
+  busName: item.bus_name || item.busName || "",
+  busRegistrationNo: item.bus_registration_no || item.busRegistrationNo || "",
+  driverName: item.driver_name || item.driverName || "",
+  driverNo: item.driver_no || item.driverNo || "",
+});
 
 export const getVehicles = async () => {
   const res = await fetch(`${API}/api/vehicles`);

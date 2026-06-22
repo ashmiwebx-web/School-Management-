@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FiX } from "react-icons/fi";
+import { FiPlusCircle } from "react-icons/fi";
 
 import CommonTable from "../../components/Table/CommonTable";
+import CommonButton from "../../components/Buttons/CommonButton";
 import Pagination from "../../components/Pagination/Pagination";
 import { EVENTS, PAGE_SIZE, classNames } from "../../constants/theme";
 
@@ -161,9 +163,15 @@ export default function Subjects() {
             </p>
           </div>
 
-          <button type="button" onClick={openAdd} className={classNames.primaryButton}>
-            Add Subject
-          </button>
+<CommonButton
+  variant="add"
+  size="lg"
+  className="min-w-[150px]"
+  onClick={openAdd}
+>
+  <FiPlusCircle size={16} />
+  Add Subject
+</CommonButton>
         </div>
 
         <CommonTable
@@ -258,14 +266,19 @@ export default function Subjects() {
               </div>
 
               <div className="flex justify-end gap-3 pt-3">
-                <button type="button" onClick={closeModal} className={classNames.secondaryButton}>
-                  Cancel
-                </button>
+  <CommonButton
+    type="button"
+    variant="secondary"
+    size="sm"
+    onClick={closeModal}
+  >
+    Cancel
+  </CommonButton>
 
-                <button type="submit" className="h-[42px] cursor-pointer rounded-[6px] bg-[var(--color-primary)] px-5 text-[14px] font-semibold text-white hover:bg-[var(--color-primaryHover)]">
-                  {editData ? "Update Subject" : "Add Subject"}
-                </button>
-              </div>
+  <CommonButton type="submit" variant="add" size="sm">
+    {editData ? "Update Subject" : "Add Subject"}
+  </CommonButton>
+</div>
             </form>
           </div>
         </div>

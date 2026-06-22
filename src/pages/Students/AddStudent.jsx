@@ -11,6 +11,7 @@ import DocumentsInfo from "./components/DocumentsInfo";
 import MedicalHistory from "./components/MedicalHistory";
 import PreviousSchoolInfo from "./components/PreviousSchoolInfo";
 import OtherDetails from "./components/OtherDetails";
+import CommonButton from "../../components/Buttons/CommonButton";
 
 import {
   getNextStudentIds,
@@ -317,22 +318,28 @@ siblings: Array.isArray(student.siblings) ? student.siblings : [],
       <PreviousSchoolInfo formData={formData} updateField={updateField} />
       <OtherDetails formData={formData} updateField={updateField} />
 
-      <div className="flex justify-end gap-4 pb-6">
-        <button
-          type="button"
-          onClick={() => navigate("/student-list")}
-          className="h-[44px] rounded-[6px] bg-[#edf1f7] px-6 text-[14px] font-semibold text-[#34415d]"
-        >
-          Cancel
-        </button>
+  
 
-        <button
-          type="submit"
-          className="h-[44px] rounded-[6px] bg-[#506ee4] px-6 text-[14px] font-semibold text-white"
-        >
-          {isEdit ? "Update Student" : "Add Student"}
-        </button>
-      </div>
+<div className="flex justify-end gap-4 pb-6">
+  <CommonButton
+    type="button"
+    variant="secondary"
+    size="lg"
+    className="min-w-[120px]"
+    onClick={() => navigate("/student-list")}
+  >
+    Cancel
+  </CommonButton>
+
+  <CommonButton
+    type="submit"
+    variant="add"
+    size="lg"
+    className="min-w-[160px]"
+  >
+    {isEdit ? "Update Student" : "Add Student"}
+  </CommonButton>
+</div>
     </form>
   );
 }

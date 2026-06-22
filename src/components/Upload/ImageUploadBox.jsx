@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import CommonButton from "../Buttons/CommonButton";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -19,6 +20,12 @@ const getImageSrc = (file) => {
 
 export default function ImageUploadBox({ file, onChange }) {
   const [preview, setPreview] = useState("");
+  const inputRef = useRef(null);
+
+  const inputId = useMemo(
+    () => `upload-${Math.random().toString(36).slice(2)}`,
+    []
+  );
 
   useEffect(() => {
     const src = getImageSrc(file);
@@ -31,14 +38,14 @@ export default function ImageUploadBox({ file, onChange }) {
     };
   }, [file]);
 
-  const inputId = useMemo(
-    () => `upload-${Math.random().toString(36).slice(2)}`,
-    []
-  );
+  const handleRemove = () => {
+    if (inputRef.current) inputRef.current.value = "";
+    onChange(null);
+  };
 
   return (
     <div className="flex items-center gap-5">
-      <div className="flex h-[132px] w-[132px] items-center justify-center overflow-hidden rounded-[6px] border border-dashed border-[#dbe3f0] bg-white">
+      <div className="flex h-[85px] w-[85px] items-center justify-center overflow-hidden rounded-[6px] border border-dashed border-[#dbe3f0] bg-white">
         {preview ? (
           <img
             src={preview}
@@ -46,33 +53,37 @@ export default function ImageUploadBox({ file, onChange }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="text-[24px]">📷</span>
+          <span className="text-[15px]">📷</span>
         )}
       </div>
 
       <div>
-        <div className="mb-4 flex gap-3">
-          <label
-            htmlFor={inputId}
-            className="flex h-[44px] cursor-pointer items-center justify-center rounded-[6px] border border-[#e5e9f2] px-7 text-[14px] font-semibold text-black"
+        <div className="mb-4 flex gap-2">
+          <CommonButton
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => inputRef.current?.click()}
           >
             Upload
-          </label>
+          </CommonButton>
 
-          <button
+          <CommonButton
             type="button"
-            onClick={() => onChange(null)}
-            className="h-[44px] rounded-[6px] bg-[#506ee4] px-7 text-[14px] font-semibold text-white"
+            variant="primary"
+            size="sm"
+            onClick={handleRemove}
           >
             Remove
-          </button>
+          </CommonButton>
         </div>
 
-        <p className="text-[14px] text-[#64748b]">
-          Upload image size 2MB, Format JPG, JPEG only
+        <p className="text-[13px] text-[#64748b]">
+          Upload image size 2MB, Format JPG, JPEG, PNG only
         </p>
 
         <input
+          ref={inputRef}
           id={inputId}
           type="file"
           accept="image/jpeg,image/jpg,image/png"

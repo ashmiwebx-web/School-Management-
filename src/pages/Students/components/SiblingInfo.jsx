@@ -6,6 +6,7 @@ import FormSelect from "../../../components/Inputs/FormSelect";
 
 import { getStudents } from "../../../services/studentService";
 import { getCombinedStds } from "../../../services/combinedStdService";
+import CommonButton from "../../../components/Buttons/CommonButton";
 
 const emptySibling = {
   className: "",
@@ -323,14 +324,16 @@ export default function SiblingInfo({ formData, updateField }) {
             </div>
 
             <div className="mt-6 border-t border-[#e5e9f2] pt-5">
-              <button
-                type="button"
-                onClick={addSibling}
-                className="flex h-[46px] items-center gap-2 rounded-[6px] bg-[#506ee4] px-5 text-[15px] font-semibold text-white hover:bg-[#3d5ee1]"
-              >
-                <FiPlusCircle />
-                Add New
-              </button>
+            <CommonButton
+  type="button"
+  variant="add"
+  size="sm"
+  className="min-w-[80px] px-3"
+  onClick={addSibling}
+>
+  <FiPlusCircle size={12} />
+  Add New
+</CommonButton>
             </div>
           </>
         )}

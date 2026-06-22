@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiPlusCircle } from "react-icons/fi";
 
 import CommonTable from "../../components/Table/CommonTable";
 import CommonModal from "../../components/Modal/CommonModal";
 import FormInput from "../../components/Inputs/FormInput";
 import FormSelect from "../../components/Inputs/FormSelect";
 import Pagination from "../../components/Pagination/Pagination";
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import CommonButton from "../../components/Buttons/CommonButton";
 import { showSuccess, showError } from "../../components/Toast/AppToast";
 import { API, EVENTS, PAGE_SIZE } from "../../constants/theme";
 
@@ -42,6 +43,12 @@ export default function ClassRoomsTab() {
     try {
       const res = await fetch(`${API}/api/blocks`);
       const data = await res.json();
+
+      if (!res.ok) {
+        showError(data.message || "Failed to load blocks");
+        return;
+      }
+
       setBlocks(Array.isArray(data) ? data : []);
     } catch (error) {
       showError(error.message || "Failed to load blocks");
@@ -52,6 +59,12 @@ export default function ClassRoomsTab() {
     try {
       const res = await fetch(`${API}/api/classrooms`);
       const data = await res.json();
+
+      if (!res.ok) {
+        showError(data.message || "Failed to load class rooms");
+        return;
+      }
+
       setClassRooms(Array.isArray(data) ? data : []);
     } catch (error) {
       showError(error.message || "Failed to load class rooms");
@@ -78,7 +91,10 @@ export default function ClassRoomsTab() {
   );
 
   const floorOptions = useMemo(() => {
-    const selectedBlock = blocks.find((block) => String(block.id) === String(form.blockId));
+    const selectedBlock = blocks.find(
+      (block) => String(block.id) === String(form.blockId)
+    );
+
     const count = Number(selectedBlock?.noOfFloors) || 0;
 
     return Array.from({ length: count }, (_, index) => ({
@@ -93,7 +109,9 @@ export default function ClassRoomsTab() {
     if (!q) return classRooms;
 
     return classRooms.filter((item) =>
-      `${item.blockName} ${item.floor} ${item.roomNo} ${item.classType} ${item.capacity}`
+      `${item.blockName || ""} ${item.floor || ""} ${item.roomNo || ""} ${
+        item.classType || ""
+      } ${item.capacity || ""}`
         .toLowerCase()
         .includes(q)
     );
@@ -115,7 +133,9 @@ export default function ClassRoomsTab() {
       const next = { ...prev, [name]: value };
 
       if (name === "blockId") {
-        const selectedBlock = blocks.find((block) => String(block.id) === String(value));
+        const selectedBlock = blocks.find(
+          (block) => String(block.id) === String(value)
+        );
         next.blockName = selectedBlock?.blockName || "";
         next.floor = "";
       }
@@ -170,6 +190,7 @@ export default function ClassRoomsTab() {
     if (!form.roomNo.trim()) return showError("Room No is required");
     if (!form.classType) return showError("Class Type is required");
     if (!form.noOfBenches) return showError("No. Of Benches is required");
+
     if (!form.studentsPerBench) {
       return showError("No. Of Students in a Bench is required");
     }
@@ -200,11 +221,13 @@ export default function ClassRoomsTab() {
       }
 
       showSuccess(
-        editId ? "Class Room updated successfully" : "Class Room added successfully"
+        editId
+          ? "Class Room updated successfully"
+          : "Class Room added successfully"
       );
 
       closeModal();
-      fetchClassRooms();
+      await fetchClassRooms();
     } catch (error) {
       showError(error.message || "Backend not connected");
     }
@@ -223,7 +246,16 @@ export default function ClassRoomsTab() {
             </p>
           </div>
 
-          <PrimaryButton onClick={openAddModal}>Add Class Room</PrimaryButton>
+          <CommonButton
+            type="button"
+            variant="add"
+            size="lg"
+            className="min-w-[160px]"
+            onClick={openAddModal}
+          >
+    <FiPlusCircle size={18} />
+     Add Class Room
+          </CommonButton>
         </div>
 
         <div className="flex items-center justify-end border-b border-[#e5e9f2] p-4">
@@ -240,13 +272,13 @@ export default function ClassRoomsTab() {
           serialStart={(currentPage - 1) * PAGE_SIZE}
           onEdit={handleEdit}
           emptyText="No class rooms found"
-         columns={[
-  { title: "Block Name", key: "blockName", bold: true, align: "center" },
-  { title: "Floor", key: "floor", align: "center" },
-  { title: "Room No", key: "roomNo", blue: true, align: "center" },
-  { title: "Class Type", key: "classType", align: "center" },
-  { title: "Capacity", key: "capacity", align: "center" },
-]}
+          columns={[
+            { title: "Block Name", key: "blockName", bold: true, align: "center" },
+            { title: "Floor", key: "floor", align: "center" },
+            { title: "Room No", key: "roomNo", blue: true, align: "center" },
+            { title: "Class Type", key: "classType", align: "center" },
+            { title: "Capacity", key: "capacity", align: "center" },
+          ]}
         />
 
         <Pagination

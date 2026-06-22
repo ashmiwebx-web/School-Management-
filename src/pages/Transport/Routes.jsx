@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiPlusCircle, FiX } from "react-icons/fi";
 
 import CommonTable from "../../components/Table/CommonTable";
 import CommonModal from "../../components/Modal/CommonModal";
 import FormInput from "../../components/Inputs/FormInput";
 import FormSelect from "../../components/Inputs/FormSelect";
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import CommonButton from "../../components/Buttons/CommonButton";
 import Pagination from "../../components/Pagination/Pagination";
 import { PAGE_SIZE } from "../../constants/theme";
 import { showError, showSuccess } from "../../components/Toast/AppToast";
@@ -14,7 +15,12 @@ import { getVehicles } from "../../services/vehicleService";
 const emptyForm = {
   area: "",
   routeName: "",
-  busId: "",
+  busName: "",
+};
+
+const emptyNewRoute = {
+  area: "",
+  routeName: "",
 };
 
 export default function Routes() {
@@ -34,19 +40,17 @@ export default function Routes() {
 
   const [form, setForm] = useState(emptyForm);
   const [newArea, setNewArea] = useState("");
-  const [newRoute, setNewRoute] = useState("");
+  const [newRoute, setNewRoute] = useState(emptyNewRoute);
 
   const loadRoutes = async () => {
     try {
       const data = await getRoutes();
-      setRoutes(Array.isArray(data) ? data : []);
+      const list = Array.isArray(data) ? data : [];
 
-      setAreas([
-        ...new Set((Array.isArray(data) ? data : []).map((item) => item.area).filter(Boolean)),
-      ]);
-
+      setRoutes(list);
+      setAreas([...new Set(list.map((item) => item.area).filter(Boolean))]);
       setRouteNames([
-        ...new Set((Array.isArray(data) ? data : []).map((item) => item.routeName).filter(Boolean)),
+        ...new Set(list.map((item) => item.routeName).filter(Boolean)),
       ]);
     } catch (error) {
       showError(error.message);
@@ -78,7 +82,7 @@ export default function Routes() {
     setForm({
       area: item.area || "",
       routeName: item.routeName || "",
-      busId: item.busId || "",
+      busName: item.busName || "",
     });
     setOpen(true);
   };
@@ -88,33 +92,82 @@ export default function Routes() {
     setViewOpen(true);
   };
 
+  const closeRouteModal = () => {
+    setOpen(false);
+    setEditing(null);
+    setForm(emptyForm);
+  };
+
   const saveArea = () => {
     const value = newArea.trim();
-    if (!value) return showError("Area is required");
 
-    if (!areas.includes(value)) setAreas((prev) => [...prev, value]);
+    if (!value) {
+      showError("Area is required");
+      return;
+    }
+
+    if (!areas.includes(value)) {
+      setAreas((prev) => [...prev, value]);
+    }
 
     setNewArea("");
     setAreaOpen(false);
     showSuccess("Area added");
   };
 
+  const openRouteNameModal = () => {
+    setNewRoute({
+      area: form.area || "",
+      routeName: "",
+    });
+    setRouteOpen(true);
+  };
+
   const saveRouteName = () => {
-    const value = newRoute.trim();
-    if (!value) return showError("Route is required");
+    const areaValue = newRoute.area;
+    const routeValue = newRoute.routeName.trim();
 
-    if (!routeNames.includes(value)) setRouteNames((prev) => [...prev, value]);
+    if (!areaValue) {
+      showError("Select area first");
+      return;
+    }
 
-    setNewRoute("");
+    if (!routeValue) {
+      showError("Route is required");
+      return;
+    }
+
+    if (!routeNames.includes(routeValue)) {
+      setRouteNames((prev) => [...prev, routeValue]);
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      area: areaValue,
+      routeName: routeValue,
+    }));
+
+    setNewRoute(emptyNewRoute);
     setRouteOpen(false);
     showSuccess("Route added");
   };
 
   const handleSave = async () => {
     try {
-      if (!form.area) return showError("Area is required");
-      if (!form.routeName) return showError("Route is required");
-      if (!form.busId) return showError("Bus No is required");
+      if (!form.area) {
+        showError("Area is required");
+        return;
+      }
+
+      if (!form.routeName) {
+        showError("Route is required");
+        return;
+      }
+
+      if (!form.busName) {
+        showError("Bus Name is required");
+        return;
+      }
 
       if (editing) {
         await updateRoute(editing.id, form);
@@ -124,9 +177,7 @@ export default function Routes() {
         showSuccess("Route added successfully");
       }
 
-      setOpen(false);
-      setEditing(null);
-      setForm(emptyForm);
+      closeRouteModal();
       loadRoutes();
     } catch (error) {
       showError(error.message);
@@ -150,7 +201,16 @@ export default function Routes() {
           </p>
         </div>
 
-        <PrimaryButton onClick={openAdd}>Add Route</PrimaryButton>
+        <CommonButton
+          type="button"
+          variant="add"
+          size="lg"
+          className="min-w-[140px]"
+          onClick={openAdd}
+        >
+          <FiPlusCircle size={18} />
+          Add Route
+        </CommonButton>
       </div>
 
       <CommonTable
@@ -158,30 +218,59 @@ export default function Routes() {
         serialStart={(page - 1) * PAGE_SIZE}
         emptyText="No routes found"
         columns={[
-          { title: "Area", key: "area", align: "center", bold: true, width: "220px" },
-          { title: "Route", key: "routeName", align: "center", width: "260px" },
-          { title: "Bus No", key: "busId", align: "center", blue: true, width: "160px" },
+          {
+            title: "Area",
+            key: "area",
+            align: "center",
+            bold: true,
+            width: "220px",
+          },
+          {
+            title: "Route",
+            key: "routeName",
+            align: "center",
+            width: "260px",
+          },
+         {
+  title: "Bus Name",
+  key: "busName",
+  align: "center",
+  blue: true,
+  width: "180px",
+},
         ]}
         actionTitle="Action"
+        actionWidth="120px"
         onView={openView}
         onEdit={openEdit}
       />
 
-      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
 
       <CommonModal
         open={open}
         title={editing ? "Edit Route" : "Add Route"}
         width="max-w-[520px]"
-        onClose={() => setOpen(false)}
+        onClose={closeRouteModal}
         onSave={handleSave}
         saveText={editing ? "Update" : "Save"}
       >
         <div className="space-y-4">
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <label className="text-[14px] font-semibold text-[#061b49]">Area</label>
-              <button type="button" onClick={() => setAreaOpen(true)} className="cursor-pointer text-[13px] font-semibold text-[#3158ff]">
+              <label className="text-[14px] font-semibold text-[#061b49]">
+                Area
+              </label>
+
+              <button
+                type="button"
+                onClick={() => setAreaOpen(true)}
+                className="cursor-pointer text-[13px] font-semibold text-[#3158ff]"
+              >
                 + Area
               </button>
             </div>
@@ -189,15 +278,27 @@ export default function Routes() {
             <FormSelect
               value={form.area}
               placeholder="Select Area"
-              options={areas.map((item) => ({ label: item, value: item }))}
-              onChange={(value) => setForm((prev) => ({ ...prev, area: value }))}
+              options={areas.map((item) => ({
+                label: item,
+                value: item,
+              }))}
+              onChange={(value) =>
+                setForm((prev) => ({ ...prev, area: value }))
+              }
             />
           </div>
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <label className="text-[14px] font-semibold text-[#061b49]">Routes</label>
-              <button type="button" onClick={() => setRouteOpen(true)} className="cursor-pointer text-[13px] font-semibold text-[#3158ff]">
+              <label className="text-[14px] font-semibold text-[#061b49]">
+                Routes
+              </label>
+
+              <button
+                type="button"
+                onClick={openRouteNameModal}
+                className="cursor-pointer text-[13px] font-semibold text-[#3158ff]"
+              >
                 + Routes
               </button>
             </div>
@@ -205,22 +306,35 @@ export default function Routes() {
             <FormSelect
               value={form.routeName}
               placeholder="Select Route"
-              options={routeNames.map((item) => ({ label: item, value: item }))}
-              onChange={(value) => setForm((prev) => ({ ...prev, routeName: value }))}
+              options={routeNames.map((item) => ({
+                label: item,
+                value: item,
+              }))}
+              onChange={(value) =>
+                setForm((prev) => ({ ...prev, routeName: value }))
+              }
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-[14px] font-semibold text-[#061b49]">
-              Bus No
-            </label>
+         <label className="mb-2 block text-[14px] font-semibold text-[#061b49]">
+  Bus Name
+</label>
 
-            <FormSelect
-              value={form.busId}
-              placeholder="Select Bus No"
-              options={vehicles.map((item) => ({ label: item.busId, value: item.busId }))}
-              onChange={(value) => setForm((prev) => ({ ...prev, busId: value }))}
-            />
+<FormSelect
+  value={form.busName}
+  placeholder="Select Bus Name"
+  options={vehicles.map((item) => ({
+    label: item.busName || item.bus_id || item.busId,
+    value: item.busName || item.bus_id || item.busId,
+  }))}
+  onChange={(value) =>
+    setForm((prev) => ({
+      ...prev,
+      busName: value,
+    }))
+  }
+/>
           </div>
         </div>
       </CommonModal>
@@ -234,9 +348,17 @@ export default function Routes() {
       >
         {selected && (
           <div className="space-y-3 text-[14px] text-[#202c4b]">
-            <p><b>Area:</b> {selected.area || "-"}</p>
-            <p><b>Route:</b> {selected.routeName || "-"}</p>
-            <p><b>Bus No:</b> {selected.busId || "-"}</p>
+            <p>
+              <b>Area:</b> {selected.area || "-"}
+            </p>
+            <p>
+              <b>Route:</b> {selected.routeName || "-"}
+            </p>
+            <p>
+             <p>
+  <b>Bus Name:</b> {selected.busName || "-"}
+</p>
+            </p>
           </div>
         )}
       </CommonModal>
@@ -249,19 +371,106 @@ export default function Routes() {
         onSave={saveArea}
         saveText="Save"
       >
-        <FormInput label="Area" value={newArea} placeholder="Enter Area" onChange={setNewArea} />
-      </CommonModal>
+        <div className="space-y-4">
+          <FormInput
+            label="Area"
+            value={newArea}
+            placeholder="Enter Area"
+            onChange={setNewArea}
+          />
 
-      <CommonModal
-        open={routeOpen}
-        title="Add Route Name"
-        width="max-w-[420px]"
-        onClose={() => setRouteOpen(false)}
-        onSave={saveRouteName}
-        saveText="Save"
-      >
-        <FormInput label="Route" value={newRoute} placeholder="Enter Route" onChange={setNewRoute} />
+          {areas.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {areas.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-1 rounded-full bg-[#eef2ff] px-3 py-1 text-[13px] font-semibold text-[#3158ff]"
+                >
+                  <span>{item}</span>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAreas((prev) => prev.filter((x) => x !== item))
+                    }
+                    className="cursor-pointer rounded-full hover:bg-[#dbe4ff]"
+                  >
+                    <FiX size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </CommonModal>
+<CommonModal
+  open={routeOpen}
+  title="Add Route Name"
+  width="max-w-[420px]"
+  onClose={() => setRouteOpen(false)}
+  onSave={saveRouteName}
+  saveText="Save"
+>
+  <div className="space-y-4">
+    <div>
+      <label className="mb-2 block text-[14px] font-semibold text-[#061b49]">
+        Area
+      </label>
+
+      <FormSelect
+        value={newRoute.area}
+        placeholder="Select Area"
+        options={areas.map((item) => ({
+          label: item,
+          value: item,
+        }))}
+        onChange={(value) =>
+          setNewRoute((prev) => ({
+            ...prev,
+            area: value,
+          }))
+        }
+      />
+    </div>
+
+    <FormInput
+      label="Route"
+      value={newRoute.routeName}
+      placeholder="Enter Route"
+      onChange={(value) =>
+        setNewRoute((prev) => ({
+          ...prev,
+          routeName: value,
+        }))
+      }
+    />
+
+    {routeNames.length > 0 && (
+      <div className="flex flex-wrap gap-2">
+        {routeNames.map((item) => (
+          <div
+            key={item}
+            className="flex items-center gap-1 rounded-full bg-[#eef2ff] px-3 py-1 text-[13px] font-semibold text-[#3158ff]"
+          >
+            <span>{item}</span>
+
+            <button
+              type="button"
+              onClick={() =>
+                setRouteNames((prev) =>
+                  prev.filter((x) => x !== item)
+                )
+              }
+              className="flex h-[18px] w-[18px] items-center justify-center rounded-full hover:bg-[#dbe4ff]"
+            >
+              <FiX size={10} />
+            </button>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</CommonModal>
     </div>
   );
 }

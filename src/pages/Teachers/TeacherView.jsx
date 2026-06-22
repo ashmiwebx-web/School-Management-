@@ -16,6 +16,7 @@ import {
 
 import { getTeacherById } from "../../services/teacherService";
 import { showError, showSuccess } from "../../components/Toast/AppToast";
+import CommonButton from "../../components/Buttons/CommonButton";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -153,13 +154,15 @@ function DocumentRow({ label, doc }) {
         </p>
       </div>
 
-      <button
+      <CommonButton
         type="button"
+        variant="dark"
+        size="icon"
         onClick={() => downloadDoc(doc, label)}
-        className="flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-[6px] bg-[#162341] text-white"
+        title="Download"
       >
         <FiDownload size={15} />
-      </button>
+      </CommonButton>
     </div>
   );
 }
@@ -216,25 +219,31 @@ export default function TeacherView() {
           </p>
         </div>
 
+   
         <div className="flex gap-3">
-          <button
+          <CommonButton
             type="button"
-            className="flex h-[46px] cursor-pointer items-center gap-2 rounded-[6px] bg-[#edf1f7] px-6 text-[15px] font-bold text-[#34415d]"
+            variant="soft"
+            size="sm"
+            className="min-w-[130px]"
           >
-            <FiLock size={16} />
+            <FiLock size={14} />
             Login Details
-          </button>
+          </CommonButton>
 
-          <button
+          <CommonButton
             type="button"
-            onClick={() => navigate(`/edit-teacher/${teacher.id}`)}
-            className="flex h-[46px] cursor-pointer items-center gap-2 rounded-[6px] bg-[#506ee4] px-6 text-[15px] font-bold text-white"
+            variant="add"
+            size="sm"
+            className="min-w-[140px]"
+            onClick={() => navigate(`/edit-teacher/${teacher._id || teacher.id}`)}
           >
-            <FiEdit2 size={16} />
+            <FiEdit2 size={14} />
             Edit Teacher
-          </button>
+          </CommonButton>
+</div>
         </div>
-      </div>
+  
 
       <div className="grid grid-cols-[315px_minmax(0,1fr)] items-start gap-[24px]">
         <aside className="space-y-[24px]">

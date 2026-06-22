@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiPlusCircle } from "react-icons/fi";
 
 import CommonTable from "../../components/Table/CommonTable";
 import CommonModal from "../../components/Modal/CommonModal";
 import FormInput from "../../components/Inputs/FormInput";
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import CommonButton from "../../components/Buttons/CommonButton";
 import Pagination from "../../components/Pagination/Pagination";
 import { PAGE_SIZE } from "../../constants/theme";
 import { showError, showSuccess } from "../../components/Toast/AppToast";
@@ -16,6 +17,7 @@ import {
 
 const emptyForm = {
   busId: "",
+  busName: "",
   busRegistrationNo: "",
   driverName: "",
   driverNo: "",
@@ -46,8 +48,13 @@ export default function Vehicles() {
   const openAdd = async () => {
     try {
       const data = await getNextBusId();
+
       setEditing(null);
-      setForm({ ...emptyForm, busId: data.busId || "A" });
+      setForm({
+        ...emptyForm,
+        busId: data.busId || "",
+        busName: data.busName || "A",
+      });
       setOpen(true);
     } catch (error) {
       showError(error.message);
@@ -58,6 +65,7 @@ export default function Vehicles() {
     setEditing(item);
     setForm({
       busId: item.busId || "",
+      busName: item.busName || "",
       busRegistrationNo: item.busRegistrationNo || "",
       driverName: item.driverName || "",
       driverNo: item.driverNo || "",
@@ -78,6 +86,16 @@ export default function Vehicles() {
 
   const handleSave = async () => {
     try {
+      if (!form.busId.trim()) {
+        showError("Bus ID is required");
+        return;
+      }
+
+      if (!form.busName.trim()) {
+        showError("Bus name is required");
+        return;
+      }
+
       if (!form.busRegistrationNo.trim()) {
         showError("Bus Registration No. is required");
         return;
@@ -125,7 +143,16 @@ export default function Vehicles() {
           </p>
         </div>
 
-        <PrimaryButton onClick={openAdd}>Add Vehicle</PrimaryButton>
+        <CommonButton
+          type="button"
+          variant="add"
+          size="lg"
+          className="min-w-[150px]"
+          onClick={openAdd}
+        >
+          <FiPlusCircle size={18} />
+          Add Vehicle
+        </CommonButton>
       </div>
 
       <CommonTable
@@ -141,6 +168,13 @@ export default function Vehicles() {
             width: "120px",
           },
           {
+            title: "Bus Name",
+            key: "busName",
+            align: "center",
+            bold: true,
+            width: "120px",
+          },
+          {
             title: "Bus Registration No.",
             key: "busRegistrationNo",
             align: "center",
@@ -149,7 +183,7 @@ export default function Vehicles() {
           {
             title: "Driver Name",
             key: "driverName",
-            align: "left",
+            align: "center",
             bold: true,
             width: "180px",
           },
@@ -175,6 +209,7 @@ export default function Vehicles() {
       <CommonModal
         open={open}
         title={editing ? "Edit Vehicle" : "Add Vehicle"}
+        width="max-w-[520px]"
         onClose={closeForm}
         onSave={handleSave}
         saveText={editing ? "Update" : "Save"}
@@ -183,13 +218,29 @@ export default function Vehicles() {
           <FormInput label="Bus ID" value={form.busId} readOnly />
 
           <FormInput
+            label="Bus Name"
+            value={form.busName}
+            placeholder="Enter Bus Name"
+            maxLength={20}
+            onChange={(value) =>
+              setForm((prev) => ({
+                ...prev,
+                busName: value.toUpperCase().replace(/[^A-Z]/g, ""),
+              }))
+            }
+          />
+
+          <FormInput
             label="Bus Registration No."
             value={form.busRegistrationNo}
             placeholder="Enter Bus Registration No."
             required
             maxLength={30}
             onChange={(value) =>
-              setForm((prev) => ({ ...prev, busRegistrationNo: value }))
+              setForm((prev) => ({
+                ...prev,
+                busRegistrationNo: value.toUpperCase(),
+              }))
             }
           />
 
@@ -224,15 +275,28 @@ export default function Vehicles() {
       <CommonModal
         open={viewOpen}
         title="Vehicle Details"
+        width="max-w-[420px]"
         onClose={() => setViewOpen(false)}
         showFooter={false}
       >
         {selected && (
           <div className="space-y-3 text-[14px] text-[#202c4b]">
-            <p><b>Bus ID:</b> {selected.busId || "-"}</p>
-            <p><b>Bus Registration No.:</b> {selected.busRegistrationNo || "-"}</p>
-            <p><b>Driver Name:</b> {selected.driverName || "-"}</p>
-            <p><b>Driver No.:</b> {selected.driverNo || "-"}</p>
+            <p>
+              <b>Bus ID:</b> {selected.busId || "-"}
+            </p>
+            <p>
+              <b>Bus Name:</b> {selected.busName || "-"}
+            </p>
+            <p>
+              <b>Bus Registration No.:</b>{" "}
+              {selected.busRegistrationNo || "-"}
+            </p>
+            <p>
+              <b>Driver Name:</b> {selected.driverName || "-"}
+            </p>
+            <p>
+              <b>Driver No.:</b> {selected.driverNo || "-"}
+            </p>
           </div>
         )}
       </CommonModal>

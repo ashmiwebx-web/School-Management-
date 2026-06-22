@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
+import CommonButton from "../Buttons/CommonButton";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -21,7 +22,6 @@ const getDocName = (file, displayName) => {
   if (!file) return "";
 
   if (displayName) return displayName;
-
   if (file instanceof File) return file.name;
 
   if (typeof file === "string") {
@@ -37,6 +37,8 @@ export default function DocumentUploadBox({
   onChange,
   displayName = "",
 }) {
+  const inputRef = useRef(null);
+
   const inputId = useMemo(
     () => `doc-${Math.random().toString(36).slice(2)}`,
     []
@@ -45,28 +47,47 @@ export default function DocumentUploadBox({
   const docUrl = getDocUrl(file);
   const docName = getDocName(file, displayName);
 
+  const handleRemove = () => {
+    if (inputRef.current) inputRef.current.value = "";
+    onChange(null);
+  };
+
   return (
     <div>
-      <h3 className="mb-3 text-[16px] font-bold text-[#061b49]">{label}</h3>
+      <h3 className="mb-2 text-[15px] font-bold text-[#061b49]">{label}</h3>
 
-      <p className="mb-4 text-[14px] text-[#64748b]">
-        Upload image size of 2MB, Accepted Format PDF only
+      <p className="mb-3 text-[13px] text-[#64748b]">
+        Upload document size 2MB, Accepted Format PDF only
       </p>
 
-      <div className="flex items-center gap-4">
-        <label
-          htmlFor={inputId}
-          className="flex h-[44px] cursor-pointer items-center justify-center rounded-[6px] bg-[#506ee4] px-6 text-[14px] font-semibold text-white"
+      <div className="flex flex-wrap items-center gap-3">
+        <CommonButton
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={() => inputRef.current?.click()}
         >
           Upload Document
-        </label>
+        </CommonButton>
+
+        {file && (
+          <CommonButton
+            type="button"
+            variant="danger"
+            size="sm"
+            onClick={handleRemove}
+          >
+            Remove
+          </CommonButton>
+        )}
 
         {docName && (
           <a
             href={docUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-[14px] font-medium text-[#3158ff]"
+            className="max-w-[220px] truncate text-[13px] font-medium text-[#3158ff]"
+            title={docName}
           >
             {docName}
           </a>
@@ -74,6 +95,7 @@ export default function DocumentUploadBox({
       </div>
 
       <input
+        ref={inputRef}
         id={inputId}
         type="file"
         hidden

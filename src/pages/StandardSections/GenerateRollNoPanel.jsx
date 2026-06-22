@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FiRepeat, FiSearch, FiX } from "react-icons/fi";
 import { showError, showSuccess } from "../../components/Toast/AppToast";
+import CommonButton from "../../components/Buttons/CommonButton";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -294,21 +295,18 @@ const loadData = async () => {
               />
             </div>
 
-            <button
-              type="button"
-              onClick={generateRollNo}
-              className="h-[40px] rounded-[6px] bg-[#506ee4] px-5 text-[14px] font-semibold text-white hover:bg-[#3d5ee1]"
-            >
+            <CommonButton type="button" variant="primary" size="md" onClick={generateRollNo}>
               Generate Class
-            </button>
+            </CommonButton>
 
-            <button
+            <CommonButton
               type="button"
+              variant="primary"
+              size="md"
               onClick={() => openSwapModal(filteredStudents.map((s) => s.id))}
-              className="h-[40px] rounded-[6px] bg-[#506ee4] px-5 text-[14px] font-semibold text-white hover:bg-[#3d5ee1]"
             >
               Swap All
-            </button>
+            </CommonButton>
           </div>
         </div>
 
@@ -419,26 +417,24 @@ const loadData = async () => {
             </div>
 
             <div className="flex justify-end gap-3 border-t border-[#e5e9f2] px-6 py-4">
-              <button
+              <CommonButton
                 type="button"
+                variant="secondary"
+                size="md"
                 onClick={() => setSwapOpen(false)}
-                className="h-[46px] rounded-[6px] border border-[#dbe1ee] bg-white px-6 text-[15px] font-semibold text-[#061b49]"
               >
                 Cancel
-              </button>
+              </CommonButton>
 
-              <button
+              <CommonButton
                 type="button"
+                variant="primary"
+                size="md"
                 onClick={saveSwap}
                 disabled={!targetSection}
-                className={`h-[46px] rounded-[6px] px-7 text-[15px] font-semibold text-white ${
-                  targetSection
-                    ? "bg-[#506ee4] hover:bg-[#3d5ee1]"
-                    : "bg-[#aab8f5]"
-                }`}
               >
                 Save
-              </button>
+              </CommonButton>
             </div>
           </div>
         </div>

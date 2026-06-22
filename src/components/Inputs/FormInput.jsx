@@ -39,7 +39,7 @@ export default function FormInput({
         placeholder={placeholder}
         maxLength={maxLength || undefined}
         onChange={handleChange}
-        className={`h-[44px] w-full rounded-[6px] border border-[#e5e9f2] px-3 text-[14px] text-[#202c4b] outline-none transition focus:border-[#506ee4] disabled:cursor-not-allowed disabled:bg-[#f8f9fc] ${
+        className={`h-[35px] w-full rounded-[6px] border border-[#e5e9f2] px-3 text-[14px] text-[#202c4b] outline-none transition focus:border-[#506ee4] disabled:cursor-not-allowed disabled:bg-[#f8f9fc] ${
           readOnly ? "bg-[#f8f9fc] font-semibold text-[#506ee4]" : "bg-white"
         } ${className}`}
       />

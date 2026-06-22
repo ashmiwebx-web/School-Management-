@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiPlusCircle } from "react-icons/fi";
 
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import CommonButton from "../../components/Buttons/CommonButton";
 import CommonTable from "../../components/Table/CommonTable";
 import CommonModal from "../../components/Modal/CommonModal";
 import FormInput from "../../components/Inputs/FormInput";
@@ -79,8 +80,16 @@ export default function SectionTab({ onRefresh = () => {} }) {
           <h3 className="text-[18px] font-semibold text-[#202c4b]">
             Sections
           </h3>
-
-          <PrimaryButton onClick={openAdd}>Add Sec</PrimaryButton>
+<CommonButton
+  type="button"
+  variant="add"
+  size="lg"
+  className="min-w-[120px]"
+  onClick={openAdd}
+>
+  <FiPlusCircle size={16} />
+  Add Sec
+</CommonButton>
         </div>
 
         <CommonTable

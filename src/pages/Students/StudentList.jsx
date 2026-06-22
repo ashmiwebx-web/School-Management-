@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import CommonTable from "../../components/Table/CommonTable";
 import Pagination from "../../components/Pagination/Pagination";
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import { FiPlusCircle } from "react-icons/fi";
+import CommonButton from "../../components/Buttons/CommonButton";
 import { PAGE_SIZE } from "../../constants/theme";
 import { getStudents } from "../../services/studentService";
 import { showError } from "../../components/Toast/AppToast";
@@ -59,9 +60,16 @@ export default function StudentList() {
           </p>
         </div>
 
-        <PrimaryButton onClick={() => navigate("/add-student")}>
+        <CommonButton
+          type="button"
+          variant="add"
+          size="lg"
+          className="min-w-[160px]"
+          onClick={() => navigate("/add-student")}
+        >
+          <FiPlusCircle size={18} />
           Add Student
-        </PrimaryButton>
+        </CommonButton>
       </div>
 
       <CommonTable

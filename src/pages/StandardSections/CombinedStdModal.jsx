@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import CommonModal from "../../components/Modal/CommonModal";
 import FormSelect from "../../components/Inputs/FormSelect";
 import FormInput from "../../components/Inputs/FormInput";
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import CommonButton from "../../components/Buttons/CommonButton";
 import { getStandards } from "../../services/standardService";
 import { getSections } from "../../services/sectionService";
 import {
@@ -194,19 +194,25 @@ export default function CombinedStdModal({
           </div>
         </div>
 
-        <div className="mt-5 flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="h-[40px] rounded-[6px] border border-[#e5e9f2] px-5 text-[14px] font-semibold text-[#34415d] hover:bg-[#f8fafc]"
-          >
-            Cancel
-          </button>
+     <div className="mt-5 flex justify-end gap-3">
+  <CommonButton
+    type="button"
+    variant="secondary"
+    size="md"
+    onClick={onClose}
+  >
+    Cancel
+  </CommonButton>
 
-          <PrimaryButton onClick={handleSave}>
-            {editData ? "Update" : "Add"}
-          </PrimaryButton>
-        </div>
+  <CommonButton
+    type="button"
+    variant="add"
+    size="md"
+    onClick={handleSave}
+  >
+    {editData ? "Update" : "Add"}
+  </CommonButton>
+</div>
       </CommonModal>
 
       <LevelModal

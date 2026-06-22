@@ -23,7 +23,7 @@ export default function FormSelect({
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
-        className={`h-[44px] w-full cursor-pointer rounded-[6px] border border-[#e5e9f2] bg-white px-3 text-[14px] text-[#202c4b] outline-none transition focus:border-[#506ee4] disabled:cursor-not-allowed disabled:bg-[#f8f9fc] ${className}`}
+        className={`h-[35px] w-full cursor-pointer rounded-[6px] border border-[#e5e9f2] bg-white px-3 text-[14px] text-[#202c4b] outline-none transition focus:border-[#506ee4] disabled:cursor-not-allowed disabled:bg-[#f8f9fc] ${className}`}
       >
         <option value="">{placeholder}</option>
 

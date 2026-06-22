@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiPlusCircle } from "react-icons/fi";
 
 import CommonTable from "../../components/Table/CommonTable";
 import CommonModal from "../../components/Modal/CommonModal";
 import FormSelect from "../../components/Inputs/FormSelect";
 import Pagination from "../../components/Pagination/Pagination";
-import PrimaryButton from "../../components/Buttons/PrimaryButton";
+import CommonButton from "../../components/Buttons/CommonButton";
 import { PAGE_SIZE } from "../../constants/theme";
 import { getCombinedStds } from "../../services/combinedStdService";
 import { getClassRooms } from "../../services/classRoomService";
@@ -204,7 +205,16 @@ export default function ClassAllocation() {
             </p>
           </div>
 
-          <PrimaryButton onClick={openAdd}>Add Class</PrimaryButton>
+          <CommonButton
+            type="button"
+            variant="add"
+            size="lg"
+            className="min-w-[135px]"
+            onClick={openAdd}
+          >
+         <FiPlusCircle size={18} />
+          Add Class
+          </CommonButton>
         </div>
 
         <CommonTable
@@ -212,42 +222,47 @@ export default function ClassAllocation() {
           serialStart={(page - 1) * PAGE_SIZE}
           onEdit={openEdit}
           emptyText="No class allocations found"
-columns={[
-  { title: "Academic Year", key: "academicYear", blue: true, align: "center" },
-{
-  title: "Standard",
-  key: "stdName",
-  bold: true,
-  align: "center",
-  render: (item) => {
-    const map = {
-      "PRE KG": "Pre KG",
-      "LKG": "LKG",
-      "UKG": "UKG",
-      "FIRST STANDARD": "First Std",
-      "SECOND STANDARD": "Second Std",
-      "THIRD STANDARD": "Third Std",
-      "FOURTH STANDARD": "Fourth Std",
-      "FIFTH STANDARD": "Fifth Std",
-      "SIXTH STANDARD": "Sixth Std",
-      "SEVENTH STANDARD": "Seventh Std",
-      "EIGHTH STANDARD": "Eighth Std",
-      "NINTH STANDARD": "Ninth Std",
-      "TENTH STANDARD": "Tenth Std",
-      "ELEVENTH STANDARD": "Eleventh Std",
-      "TWELFTH STANDARD": "Twelfth Std",
-    };
+          columns={[
+            {
+              title: "Academic Year",
+              key: "academicYear",
+              blue: true,
+              align: "center",
+            },
+            {
+              title: "Standard",
+              key: "stdName",
+              bold: true,
+              align: "center",
+              render: (item) => {
+                const map = {
+                  "PRE KG": "Pre KG",
+                  LKG: "LKG",
+                  UKG: "UKG",
+                  "FIRST STANDARD": "First Std",
+                  "SECOND STANDARD": "Second Std",
+                  "THIRD STANDARD": "Third Std",
+                  "FOURTH STANDARD": "Fourth Std",
+                  "FIFTH STANDARD": "Fifth Std",
+                  "SIXTH STANDARD": "Sixth Std",
+                  "SEVENTH STANDARD": "Seventh Std",
+                  "EIGHTH STANDARD": "Eighth Std",
+                  "NINTH STANDARD": "Ninth Std",
+                  "TENTH STANDARD": "Tenth Std",
+                  "ELEVENTH STANDARD": "Eleventh Std",
+                  "TWELFTH STANDARD": "Twelfth Std",
+                };
 
-    return map[item.stdName?.toUpperCase()] || item.stdName;
-  },
-},
-  { title: "Section", key: "sectionName", align: "center" },
-  { title: "Academic Level", key: "academicLevel", align: "center" },
-  { title: "Block", key: "blockName", align: "center" },
-  { title: "Floor", key: "floor", align: "center" },
-  { title: "Room No", key: "roomNo", blue: true, align: "center" },
-  { title: "Capacity", key: "capacity", align: "center" },
-]}
+                return map[item.stdName?.toUpperCase()] || item.stdName;
+              },
+            },
+            { title: "Section", key: "sectionName", align: "center" },
+            { title: "Academic Level", key: "academicLevel", align: "center" },
+            { title: "Block", key: "blockName", align: "center" },
+            { title: "Floor", key: "floor", align: "center" },
+            { title: "Room No", key: "roomNo", blue: true, align: "center" },
+            { title: "Capacity", key: "capacity", align: "center" },
+          ]}
         />
 
         <Pagination

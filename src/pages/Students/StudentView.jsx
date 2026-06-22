@@ -16,6 +16,7 @@ import {
 
 import { getStudentById } from "../../services/studentService";
 import { showError, showSuccess } from "../../components/Toast/AppToast";
+import CommonButton from "../../components/Buttons/CommonButton";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -204,12 +205,9 @@ function ParentRow({ photo, name, relation, phone, email }) {
         <InfoBlock label="Phone" value={phone} />
         <InfoBlock label="Email" value={email} />
 
-        <button
-          type="button"
-          className="flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-[6px] bg-[#162341] text-white"
-        >
+        <CommonButton type="button" variant="dark" size="icon" title="Document">
           <FiFileText size={14} />
-        </button>
+        </CommonButton>
       </div>
     </div>
   );
@@ -238,13 +236,15 @@ function DocumentRow({ label, doc }) {
         </p>
       </div>
 
-      <button
+      <CommonButton
         type="button"
+        variant="dark"
+        size="icon"
         onClick={() => downloadDoc(doc, label)}
-        className="flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-[6px] bg-[#162341] text-white"
+        title="Download"
       >
         <FiDownload size={15} />
-      </button>
+      </CommonButton>
     </div>
   );
 }
@@ -329,22 +329,26 @@ const siblings = Array.isArray(student.siblings)
         </div>
 
         <div className="flex gap-3">
-          <button
-            type="button"
-            className="flex h-[46px] cursor-pointer items-center gap-2 rounded-[6px] bg-[#edf1f7] px-6 text-[15px] font-bold text-[#34415d]"
-          >
-            <FiLock size={16} />
-            Login Details
-          </button>
+        <CommonButton
+  type="button"
+  variant="soft"
+  size="sm"
+  className="min-w-[130px]"
+>
+  <FiLock size={14} />
+  Login Details
+</CommonButton>
 
-          <button
-            type="button"
-            onClick={() => navigate(`/edit-student/${student._id || student.id}`)}
-            className="flex h-[46px] cursor-pointer items-center gap-2 rounded-[6px] bg-[#506ee4] px-6 text-[15px] font-bold text-white"
-          >
-            <FiEdit2 size={16} />
-            Edit Student
-          </button>
+        <CommonButton
+  type="button"
+  variant="add"
+  size="sm"
+  className="min-w-[140px]"
+  onClick={() => navigate(`/edit-student/${student._id || student.id}`)}
+>
+  <FiEdit2 size={14} />
+  Edit Student
+</CommonButton>
         </div>
       </div>
 
@@ -391,12 +395,14 @@ const siblings = Array.isArray(student.siblings)
               <BasicRow label="Mother Tongue" value={student.motherTongue} />
               <BasicRow label="Language" value={student.languageKnown} />
 
-              <button
+              <CommonButton
                 type="button"
-                className="mt-4 h-[40px] w-full cursor-pointer rounded-[5px] bg-[#506ee4] text-[14px] font-bold text-white"
+                variant="primary"
+                size="md"
+                className="mt-4 w-full"
               >
                 Add Fees
-              </button>
+              </CommonButton>
             </div>
           </Card>
 

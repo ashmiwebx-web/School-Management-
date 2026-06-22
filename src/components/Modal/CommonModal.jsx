@@ -1,5 +1,6 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
+import CommonButton from "../Buttons/CommonButton";
 
 export default function CommonModal({
   open = false,
@@ -35,23 +36,25 @@ export default function CommonModal({
 
         {showFooter && (
           <div className="flex h-[68px] shrink-0 justify-end gap-3 border-t border-[#e5e9f2] px-5 py-4">
-            <button
+            <CommonButton
               type="button"
+              variant="secondary"
+              size="md"
               onClick={onClose}
-              className="h-[40px] cursor-pointer rounded-[6px] border border-[#e5e9f2] px-5 text-[14px] font-semibold text-[#34415d] hover:bg-[#f8f9fc]"
             >
               {cancelText}
-            </button>
+            </CommonButton>
 
             {onSave && (
-              <button
+              <CommonButton
                 type="button"
+                variant="primary"
+                size="md"
                 onClick={onSave}
                 disabled={saveDisabled}
-                className="h-[40px] cursor-pointer rounded-[6px] bg-[#506ee4] px-5 text-[14px] font-semibold text-white hover:bg-[#3d5ee1] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saveText}
-              </button>
+              </CommonButton>
             )}
           </div>
         )}

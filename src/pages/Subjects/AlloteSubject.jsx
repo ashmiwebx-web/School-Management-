@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-
+import { FiPlusCircle } from "react-icons/fi";
 import CommonModal from "../../components/Modal/CommonModal";
 import CommonTable from "../../components/Table/CommonTable";
 import Pagination from "../../components/Pagination/Pagination";
@@ -12,6 +12,7 @@ import {
 } from "../../services/alloteSubjectService";
 import { getSubjects } from "../../services/subjectService";
 import { showError, showSuccess } from "../../components/Toast/AppToast";
+import CommonButton from "../../components/Buttons/CommonButton";
 
 const emptyForm = {
   academicLevelId: "",
@@ -157,14 +158,15 @@ export default function AlloteSubject() {
               Manage academic level wise subject allocation
             </p>
           </div>
-
-          <button
-            type="button"
-            onClick={openAdd}
-            className={classNames.primaryButton}
-          >
-            Allote Subject
-          </button>
+<CommonButton
+  variant="add"
+  size="lg"
+  className="min-w-[170px]"
+  onClick={openAdd}
+>
+  <FiPlusCircle size={16} />
+  Add Allote Subject
+</CommonButton>
         </div>
 
         <CommonTable
@@ -322,13 +324,14 @@ export default function AlloteSubject() {
         </div>
 
         <div className="mt-5 flex justify-end">
-          <button
-            type="button"
-            onClick={() => setViewOpen(false)}
-            className="h-[42px] cursor-pointer rounded-[6px] bg-[#506ee4] px-5 text-[14px] font-semibold text-white hover:bg-[#3d5ee1]"
-          >
-            Close
-          </button>
+        <CommonButton
+  type="button"
+  variant="primary"
+  size="sm"
+  onClick={() => setViewOpen(false)}
+>
+  Close
+</CommonButton>
         </div>
       </CommonModal>
     </div>
