@@ -224,7 +224,7 @@ export default function CommonTable({
             data.map((item, index) => (
               <tr
                 key={item.id || item._id || index}
-                className="h-[40px] border-b border-[#e5e9f2] text-[14px] text-[#061b49]"
+                className="h-[50px] border-b border-[#e5e9f2] text-[14px] text-[#061b49]"
               >
                 <td className="px-4 text-center" style={{ width: snoWidth }}>
                   {serialStart + index + 1}

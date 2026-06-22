@@ -257,7 +257,25 @@ export default function ClassAllocation() {
               },
             },
             { title: "Section", key: "sectionName", align: "center" },
-            { title: "Academic Level", key: "academicLevel", align: "center" },
+           {
+  title: "Academic Level",
+  key: "academicLevel",
+  align: "center",
+  render: (item) => {
+    const level = String(item.academicLevel || "").toUpperCase();
+
+    const map = {
+      KINDER: "Kinder",
+      PRIMARY: "Primary",
+      "UPPER PRIMARY": "Upper Primary",
+      "MIDDLE SCHOOL": "Middle",
+      "HIGH SCHOOL": "High",
+      "HIGHER SECONDARY": "Hr Sec",
+    };
+
+    return map[level] || item.academicLevel || "-";
+  },
+},
             { title: "Block", key: "blockName", align: "center" },
             { title: "Floor", key: "floor", align: "center" },
             { title: "Room No", key: "roomNo", blue: true, align: "center" },

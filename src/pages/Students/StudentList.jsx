@@ -40,7 +40,16 @@ export default function StudentList() {
 
     return `${day}/${month}/${year}`;
   };
+const formatClassName = (value) => {
+  if (!value) return "-";
 
+  return value
+    .replace(/STANDARD/gi, "STD")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
   const totalPages = Math.ceil(students.length / PAGE_SIZE) || 1;
 
   const paginated = useMemo(() => {
@@ -91,12 +100,13 @@ export default function StudentList() {
             bold: true,
             width: "180px",
           },
-          {
-            title: "Class",
-            key: "className",
-            align: "left",
-            width: "160px",
-          },
+         {
+  title: "Class",
+  key: "className",
+  align: "center",
+  width: "160px",
+  render: (item) => formatClassName(item.className),
+},
           {
             title: "Section",
             key: "sectionName",

@@ -35,9 +35,19 @@ export default function TeacherList() {
     return teachers.slice(start, start + PAGE_SIZE);
   }, [teachers, page]);
 
-  const getTeacherName = (item) =>
-    `${item.firstName || ""} ${item.lastName || ""}`.trim() || "-";
+ const getTeacherName = (item) =>
+  `${item.firstName || ""} ${item.lastName || ""}`.trim() || "-";
 
+const formatClassName = (value) => {
+  if (!value) return "-";
+
+  return value
+    .replace(/STANDARD/gi, "STD")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
   return (
     <div className={classNames.page}>
       <div className={classNames.card}>
@@ -79,12 +89,13 @@ export default function TeacherList() {
               width: "24%",
               render: getTeacherName,
             },
-            {
-              key: "className",
-              title: "Class",
-              align: "center",
-              width: "14%",
-            },
+           {
+  key: "className",
+  title: "Class",
+  align: "center",
+  width: "16%",
+  render: (item) => formatClassName(item.className),
+},
             {
               key: "subject",
               title: "Subject",
